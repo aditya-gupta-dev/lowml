@@ -1,6 +1,6 @@
 # 1. Compiler and Flags
 CXX      := g++
-CXXFLAGS := -Wall -Wextra -std=c++17 -I.
+CXXFLAGS := -Wall -Wextra -std=c++17 -I. -fpermissive
 TARGET   := main
 
 # 2. Source Files
