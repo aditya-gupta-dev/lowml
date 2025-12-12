@@ -1,10 +1,7 @@
 #include<iostream>
+#include<linear_regression.hpp>
 
-namespace models { 
-    class LinearRegression2D { 
-        public: 
-            LinearRegression2D(double x[], double y[]) { 
-
-            }
-    };
-};
+models::LinearRegression2D::LinearRegression2D(double learning_rate = 0.01, int epochs = 1000) 
+{
+    std::cout << "this";
+}
