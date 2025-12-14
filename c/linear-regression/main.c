@@ -16,12 +16,49 @@ float predict(float x, LinearRegression2D *regression)
     return regression->slope * x + regression->intercept;
 }
 
-LinearRegression2D train(float *x_axis, float *y_axis, int max_epocs)
+float compute_gradient(float *x_axis, float *error_rate, int start, int end)
+{
+    // bug fix: dividing integer with another integer throws away decimal part 
+    // instead of getting 2 / (10 - 0) => 0.2 we get 0 part always making the 
+    // compute gradient 0 
+    // float k = 2 / (end - start); 
+    float k = 2.0 / (end - start); 
+    float summation = 0;
+    for (int i = start; i < end; i++)
+    {
+        float x = *(x_axis + i);
+        float err = *(error_rate + i);
+        summation += err * x;
+    }
+    return k * summation; 
+}
+
+void debug_values(float* val, int start, int end, char *label)
+{
+    printf("\n%s\n",label);
+    for(int i = start; i < end; i++)
+    {
+        printf("%.3f, ", *(val+i));
+    }
+    printf("\n");
+}
+
+LinearRegression2D train(float *x_axis, float *y_axis, int start, int end, int max_epocs)
 {
     LinearRegression2D regression = {.intercept = 0, .slope = 0};
+    float error_rate[end - start];
+
     for (int epoc = 1; epoc <= max_epocs; epoc++)
     {
-
+        for (int i = start; i < end; i++)
+        {
+            float x = *(x_axis + i);
+            float y = *(y_axis + i);
+            float predicted_y = predict(x, &regression);
+            error_rate[i] = predicted_y - y;
+        }
+        debug_values(error_rate, start, end, "error-rate");
+        printf("gradient: %f\n", compute_gradient(x_axis, error_rate, start, end));
     }
 }
 
@@ -53,6 +90,7 @@ int main()
     }
     fclose(file);
 
-    LinearRegression2D regression = train(x_axis, y_axis, EPOCS);
+    // TODO: change to 1000 epocs
+    LinearRegression2D regression = train(x_axis, y_axis, 0, MAX_LINES, 1);
     return EXIT_SUCCESS;
 };
