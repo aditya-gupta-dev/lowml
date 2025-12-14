@@ -17,7 +17,8 @@ int main()
     }
 
     file.close();
+    delete &file; 
+
     models::LinearRegression2D* linear = new models::LinearRegression2D();
-    std::cout << "this is working\n";
     return 0;
 }
